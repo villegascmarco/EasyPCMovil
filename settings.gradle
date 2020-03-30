@@ -1,0 +1,2 @@
+rootProject.name='EasyPCMovil'
+include ':app'

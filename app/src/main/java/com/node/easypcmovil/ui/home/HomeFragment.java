@@ -1,20 +1,49 @@
 package com.node.easypcmovil.ui.home;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.node.easypcmovil.MainActivity;
 import com.node.easypcmovil.R;
+import com.node.easypcmovil.commons.EasyPCCommons;
+import com.node.easypcmovil.components.AdapterEstacionamiento;
+import com.node.easypcmovil.modelo.Administrador;
+import com.node.easypcmovil.modelo.Estacionamiento;
+
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
+
+    private RecyclerView recyclerEstacionamiento;
+
+    List<Estacionamiento> estacionamientos;
+    AdapterEstacionamiento adapterEstacionamiento;
 
     private HomeViewModel homeViewModel;
 
@@ -23,13 +52,75 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+        recyclerEstacionamiento = root.findViewById(R.id.recyclerEstacionamiento);
+        recyclerEstacionamiento.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        consultarEstacionamientos();
+
         return root;
+    }
+
+    public void consultarEstacionamientos() {
+        //Instanciamos una nueva peticion HTTP a través de Volley:
+        RequestQueue rq = Volley.newRequestQueue(getActivity());
+
+        // Administrador administrador = new Administrador(" {\"idAdministrador\" : \"1585789322571\", \"telefono\" : \"159630\", \"colonia\" : \"Barrio Chico\", \"calles\" : \"Blvd Aereopuerto\", \"numero\" : \"6818\", \"cp\" : 37000, \"persona\" : { \"idPersona\" : \"1585789322571\", \"nombre\" : \"Pedro\", \"apellido\" : \"Hérnandez\", \"estatus\" : 1, \"correo\" : \"a@a.com\", \"contrasenia\" : \"1\", \"foto\" : \"https://thumbs.dreamstime.com/z/retrato-afroamericano-joven-sonriente-feliz-del-perfil-hombre-130554862.jpg\", \"token\" : \"6516ca2584b2e404aa2fa45ea53985541070df2dafe5558c5428562c6b84e203\" } }");
+
+        String url = EasyPCCommons.URL_SERVER + EasyPCCommons.URL_ESTACIONAMIENTO + "user/getAll?";
+//        url += "active=true&";
+//        try {
+//            url += "persona=" + URLEncoder.encode(new Gson().toJson(administrador), "utf-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+
+        //Genermos un nuevo objeto Response.Listener<String> para indicar que
+        //tengamos una respuesta correcta:
+        StringRequest postRquest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Type estacionamientoListType = new TypeToken<ArrayList<Estacionamiento>>() {
+                        }.getType();
+
+                        Gson gson = new Gson();
+
+                        try {
+                            estacionamientos = gson.fromJson(response, estacionamientoListType);
+                        } catch (Exception exception) {
+                            estacionamientos = null;
+                        }
+
+                        // System.out.println(estacionamientos);
+
+                        if (adapterEstacionamiento == null) {
+                            adapterEstacionamiento = new AdapterEstacionamiento((MainActivity) getActivity(), estacionamientos);
+                        } else {
+                            adapterEstacionamiento.setItems(estacionamientos);
+                        }
+
+                        recyclerEstacionamiento.setAdapter(adapterEstacionamiento);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("error", " volley");
+                        // System.out.println("error: " + error.getMessage());
+                        // Log.i("error", error.getMessage());
+                    }
+                }
+
+        );
+
+        postRquest.setRetryPolicy(new DefaultRetryPolicy(
+                1000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
+
+        rq.add(postRquest);
+
     }
 }

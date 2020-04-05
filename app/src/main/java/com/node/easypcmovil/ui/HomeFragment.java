@@ -1,4 +1,4 @@
-package com.node.easypcmovil.ui.home;
+package com.node.easypcmovil.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.node.easypcmovil.R;
+import com.node.easypcmovil.ui.home.HomeViewModel;
 
 public class HomeFragment extends Fragment {
 
@@ -30,6 +31,7 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
         return root;
     }
 }

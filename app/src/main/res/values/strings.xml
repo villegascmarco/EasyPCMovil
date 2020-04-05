@@ -11,5 +11,9 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
 
+    <string name="menu_cerrar_sesion">Cerrar Sesión</string>
+
     <string name="home_second">Home Second</string>
+
+    <string name="server_client_id">1086582160298-9atg6hb6ku0phovi49o239d8etj8770r.apps.googleusercontent.com</string>
 </resources>

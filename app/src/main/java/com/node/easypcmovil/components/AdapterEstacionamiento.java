@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class AdapterEstacionamiento extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private MainActivity activityMain;

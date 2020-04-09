@@ -46,9 +46,9 @@ public class AdapterEstacionamiento extends RecyclerView.Adapter<RecyclerView.Vi
                     .show();
 
             Intent intent = new Intent(context, MapsActivity.class);
-            intent.putExtra("nombre", "Casa");
-            intent.putExtra("latitud", "21.117602");
-            intent.putExtra("longitud", "-101.719329");
+            intent.putExtra("nombre", nombre);
+            intent.putExtra("latitud", latitud);
+            intent.putExtra("longitud", longitud);
             context.startActivity(intent);
         }
     };

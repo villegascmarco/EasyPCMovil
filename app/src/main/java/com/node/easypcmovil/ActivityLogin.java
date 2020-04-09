@@ -25,6 +25,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.node.easypcmovil.commons.EasyPCCommons;
 import com.node.easypcmovil.modelo.Persona;
 import com.node.easypcmovil.modelo.Usuario;
@@ -41,10 +42,12 @@ public class ActivityLogin extends AppCompatActivity {
     private TextView txtUsuario;
     private TextView txtContrasenia;
 
+    private TextInputLayout tilCorreo;
+    private TextInputLayout tilContrasenia;
+
     private int RC_SIGN_IN = 0;
 
     protected GoogleSignInClient mGoogleSignInClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class ActivityLogin extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
+            EasyPCCommons.callLoadingScreen(new View(this));
             Usuario usuario = new Usuario();
             usuario.setIdToken(account.getIdToken());
             verificarIdToken(usuario.toString(), "ingresarGoogle");
@@ -76,14 +80,17 @@ public class ActivityLogin extends AppCompatActivity {
     private void mapearElementos() {
         btnIngresarGoogle = findViewById(R.id.btnIngresarGoogle);
         btnIngresar = findViewById(R.id.btnIngresar);
-        txtUsuario = findViewById(R.id.txtUsuario);
-        txtContrasenia = findViewById(R.id.txtContrasenia);
+//        txtUsuario = findViewById(R.id.txtUsuario);
+//        txtContrasenia = findViewById(R.id.txtContrasenia);
+        tilCorreo = findViewById(R.id.tilCorreo);
+        tilContrasenia = findViewById(R.id.tilContrasenia);
     }
 
     private void inicializarListeners() {
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EasyPCCommons.callLoadingScreen(v);
                 iniciarSesion(v);
             }
         });
@@ -91,12 +98,8 @@ public class ActivityLogin extends AppCompatActivity {
         btnIngresarGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.btnIngresarGoogle:
-                        cargarCuentasGoogle();
-                        break;
-                    // ...
-                }
+                EasyPCCommons.callLoadingScreen(v);
+                cargarCuentasGoogle();
 
             }
         });
@@ -105,10 +108,13 @@ public class ActivityLogin extends AppCompatActivity {
     protected void iniciarSesion(View view) {
         Usuario usuario;
         Persona persona;
-        String correo = txtUsuario.getText().toString().trim();
-        String contrasenia = txtContrasenia.getText().toString().trim();
+        String correo = tilCorreo.getEditText().getText().toString().trim();
+        String contrasenia = tilContrasenia.getEditText().getText().toString().trim();
 
         if (!correo.isEmpty() || !contrasenia.isEmpty()) {
+            tilCorreo.setErrorEnabled(false);
+            tilContrasenia.setError(null);
+
             usuario = new Usuario();
             persona = new Persona();
 
@@ -118,8 +124,12 @@ public class ActivityLogin extends AppCompatActivity {
 
             verificarIdToken(usuario.toString(), "ingresar");
         } else {
-            Snackbar.make(view, "Correo y/o contraseña faltante", Snackbar.LENGTH_SHORT)
-                    .show();
+
+            tilCorreo.setError("Ingrese un correo.");
+            tilContrasenia.setError("Ingrese una contraseña");
+            EasyPCCommons.dismissLoadingScreen();
+
+
         }
     }
 
@@ -174,18 +184,21 @@ public class ActivityLogin extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         String url = EasyPCCommons.URL_USUARIO + ingresar;
+        if(EasyPCCommons.getDialog() == null) {
+            EasyPCCommons.callLoadingScreen(new View(this));
+        }
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
-
                         Log.d("Respuesta", response);
-
+                        EasyPCCommons.dismissLoadingScreen();
                         if (!response.contains("error") && response.contains("correo")) {
                             cambiarIntent(response);
+                            finish();
                         } else {
-                            View view = findViewById(R.id.txtUsuario).getRootView();
+                            View view = findViewById(R.id.tilCorreo).getRootView();
 
                             Snackbar.make(view, "Datos incorrectos", Snackbar.LENGTH_SHORT)
                                     .show();
@@ -199,7 +212,7 @@ public class ActivityLogin extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Error", String.valueOf(error));
 //                        txtView.setText(error.toString());
-
+                        EasyPCCommons.dismissLoadingScreen();
                     }
                 }
         ) {

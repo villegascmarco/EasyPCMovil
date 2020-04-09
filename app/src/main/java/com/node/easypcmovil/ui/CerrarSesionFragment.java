@@ -68,5 +68,6 @@ public class CerrarSesionFragment extends Fragment {
     private void cambiarIntent() {
         Intent intent = new Intent(getContext(), ActivityLogin.class);
         startActivity(intent);
+        getActivity().finish();;
     }
 }

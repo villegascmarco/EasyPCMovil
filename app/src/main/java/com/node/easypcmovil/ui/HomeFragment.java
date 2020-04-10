@@ -1,9 +1,6 @@
-package com.node.easypcmovil.ui.home;
+package com.node.easypcmovil.ui;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,19 +21,19 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.node.easypcmovil.MainActivity;
+import com.node.easypcmovil.ActivityMain;
 import com.node.easypcmovil.R;
 import com.node.easypcmovil.commons.EasyPCCommons;
 import com.node.easypcmovil.components.AdapterEstacionamiento;
-import com.node.easypcmovil.modelo.Administrador;
 import com.node.easypcmovil.modelo.Estacionamiento;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.net.URLEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.node.easypcmovil.ui.home.HomeViewModel;
+
 
 public class HomeFragment extends Fragment {
 
@@ -53,10 +50,12 @@ public class HomeFragment extends Fragment {
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+
         recyclerEstacionamiento = root.findViewById(R.id.recyclerEstacionamiento);
         recyclerEstacionamiento.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         consultarEstacionamientos();
+
 
         return root;
     }
@@ -95,7 +94,7 @@ public class HomeFragment extends Fragment {
                         // System.out.println(estacionamientos);
 
                         if (adapterEstacionamiento == null) {
-                            adapterEstacionamiento = new AdapterEstacionamiento((MainActivity) getActivity(), estacionamientos);
+                            adapterEstacionamiento = new AdapterEstacionamiento((ActivityMain) getActivity(), estacionamientos);
                         } else {
                             adapterEstacionamiento.setItems(estacionamientos);
                         }

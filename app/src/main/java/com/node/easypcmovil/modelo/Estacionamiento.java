@@ -1,6 +1,8 @@
+
 package com.node.easypcmovil.modelo;
 
 public class Estacionamiento {
+
     private String idEstacionamiento;
     private int estatus;
     private double latitud;
@@ -115,7 +117,6 @@ public class Estacionamiento {
     {
         this.administrador = administrador;
     }
-
 
 
     @Override

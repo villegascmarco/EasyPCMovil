@@ -1,8 +1,10 @@
+
 package com.node.easypcmovil.modelo;
 
 import com.google.gson.Gson;
 
 public class Administrador {
+
     private String idAdministrador;
     private String telefono;
     private String colonia;
@@ -100,4 +102,5 @@ public class Administrador {
 
         return gson.toJson(administrador);
     }
+
 }

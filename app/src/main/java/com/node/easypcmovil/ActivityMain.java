@@ -1,12 +1,17 @@
 package com.node.easypcmovil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.node.easypcmovil.modelo.Usuario;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -16,9 +21,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class ActivityMain extends AppCompatActivity {
 
+    private Usuario usuario;
     private AppBarConfiguration mAppBarConfiguration;
+    private TextView correo;
+    private TextView nombre;
+    private ImageView foto;
+    private NavigationView navigationView;
+    private View headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
+        mapearElementos();
+
+        modificarHeader();
     }
 
     @Override
@@ -60,4 +76,25 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    protected void mapearElementos() {
+        Intent intent = getIntent();
+        usuario = new Usuario(intent.getStringExtra("cuenta"));
+
+        navigationView = findViewById(R.id.nav_view);
+        headerView = navigationView.getHeaderView(0);
+
+        correo = headerView.findViewById(R.id.correo);
+        nombre = headerView.findViewById(R.id.nombre);
+        foto = headerView.findViewById(R.id.foto);
+    }
+
+    protected void modificarHeader() {
+
+        correo.setText(usuario.getPersona().getCorreo());
+        nombre.setText(usuario.getPersona().getNombre() + " " + usuario.getPersona().getApellido());
+        Glide.with(this).load(usuario.getPersona().getFoto()).into(foto);
+    }
+
+
 }

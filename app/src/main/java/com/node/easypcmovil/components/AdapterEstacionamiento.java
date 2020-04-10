@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.node.easypcmovil.MainActivity;
+import com.node.easypcmovil.ActivityMain;
 import com.node.easypcmovil.MapsActivity;
 import com.node.easypcmovil.R;
 import com.node.easypcmovil.modelo.Estacionamiento;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class AdapterEstacionamiento extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private MainActivity activityMain;
+    private ActivityMain activityMain;
 
     private Context context;
 
@@ -54,7 +54,7 @@ public class AdapterEstacionamiento extends RecyclerView.Adapter<RecyclerView.Vi
     };
 
 
-    public AdapterEstacionamiento(MainActivity activityMain, List<Estacionamiento> estacionamientos) {
+    public AdapterEstacionamiento(ActivityMain activityMain, List<Estacionamiento> estacionamientos) {
         super();
 
         this.activityMain = activityMain;

@@ -1,6 +1,8 @@
+
 package com.node.easypcmovil.modelo;
 
 import com.google.gson.Gson;
+
 
 public class Persona {
 
@@ -110,4 +112,5 @@ public class Persona {
 
         return gson.toJson(persona);
     }
+
 }

@@ -17,6 +17,7 @@ import com.node.easypcmovil.ActivityMain;
 import com.node.easypcmovil.MapsActivity;
 import com.node.easypcmovil.R;
 import com.node.easypcmovil.modelo.Estacionamiento;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -95,8 +96,10 @@ public class AdapterEstacionamiento extends RecyclerView.Adapter<RecyclerView.Vi
         //Picasso.get().load(e.getFoto()).into(vhe.imgvFotoEstacionamiento);
         try {
             System.out.println(e.getFoto());
+            //Picasso.get().load(e.getFoto()).into(vhe.imgvFotoEstacionamiento);
             vhe.imgvFotoEstacionamiento.setImageDrawable(fromBase64(context, e.getFoto()));
         } catch (Exception ex) {
+            vhe.imgvFotoEstacionamiento.setImageDrawable(null);
             System.out.println("error foto");
             ex.printStackTrace();
         }
@@ -104,7 +107,11 @@ public class AdapterEstacionamiento extends RecyclerView.Adapter<RecyclerView.Vi
 
     private static Drawable fromBase64(Context context, @NonNull String base64) throws Exception {
         Drawable ret = null;//from w ww.  ja  va  2  s  .  c  o  m
+        if (base64 == null) {
+            return null;
+        }
         if (!base64.equals("")) {
+            base64 = base64.substring(22);
             ByteArrayInputStream bais = new ByteArrayInputStream(
                     Base64.decode(base64.getBytes(), Base64.DEFAULT));
             ret = Drawable.createFromResourceStream(context.getResources(),

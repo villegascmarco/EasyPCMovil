@@ -64,15 +64,7 @@ public class HomeFragment extends Fragment {
         //Instanciamos una nueva peticion HTTP a través de Volley:
         RequestQueue rq = Volley.newRequestQueue(getActivity());
 
-        // Administrador administrador = new Administrador(" {\"idAdministrador\" : \"1585789322571\", \"telefono\" : \"159630\", \"colonia\" : \"Barrio Chico\", \"calles\" : \"Blvd Aereopuerto\", \"numero\" : \"6818\", \"cp\" : 37000, \"persona\" : { \"idPersona\" : \"1585789322571\", \"nombre\" : \"Pedro\", \"apellido\" : \"Hérnandez\", \"estatus\" : 1, \"correo\" : \"a@a.com\", \"contrasenia\" : \"1\", \"foto\" : \"https://thumbs.dreamstime.com/z/retrato-afroamericano-joven-sonriente-feliz-del-perfil-hombre-130554862.jpg\", \"token\" : \"6516ca2584b2e404aa2fa45ea53985541070df2dafe5558c5428562c6b84e203\" } }");
-
         String url = EasyPCCommons.URL_SERVER + EasyPCCommons.URL_ESTACIONAMIENTO + "user/getAll?";
-//        url += "active=true&";
-//        try {
-//            url += "persona=" + URLEncoder.encode(new Gson().toJson(administrador), "utf-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
 
         //Genermos un nuevo objeto Response.Listener<String> para indicar que
         //tengamos una respuesta correcta:
@@ -106,8 +98,6 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("error", " volley");
-                        // System.out.println("error: " + error.getMessage());
-                        // Log.i("error", error.getMessage());
                     }
                 }
 
